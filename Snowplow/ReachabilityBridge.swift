@@ -12,34 +12,24 @@ import Reachability
 @objc public class ReachabilityBridge: NSObject {
 
     @objc static public func connectionType() -> String {
-        let reachability = Reachability()!
-        do {
-            try reachability.startNotifier()
-        } catch {
-            return "offline"
-        }
+        let status = currentNetworkStatus()
 
-        switch reachability.connection {
-        case .cellular:
-            reachability.stopNotifier()
+        switch status {
+        case .ReachableViaWWAN:
             return "mobile"
-        case .wifi:
-            reachability.stopNotifier()
+        case .ReachableViaWiFi:
             return "wifi"
-        case .none:
-            reachability.stopNotifier()
+        case .NotReachable:
             return "offline"
         }
     }
 
     @objc static public func isOnline() -> Bool {
-        let reachability = Reachability()!
-        do {
-            try reachability.startNotifier()
-        } catch {
-            return false
-        }
-        return reachability.connection != .none
+        return currentNetworkStatus() != .NotReachable
+    }
+
+    private static func currentNetworkStatus() -> NetworkStatus {
+        let reachability = Reachability.forInternetConnection()
+        return reachability?.currentReachabilityStatus() ?? .NotReachable
     }
 }
-

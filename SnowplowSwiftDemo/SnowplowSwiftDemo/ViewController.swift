@@ -30,15 +30,15 @@ class ViewController: UIViewController, UITextFieldDelegate, SPRequestCallback {
     var sentCounter : Int = 0
     var updateTimer : Timer!
     var uri : String = ""
-    var methodType : SPRequestOptions = SPRequestGet
-    var protocolType : SPProtocol = SPHttp
+    var methodType : SPRequestOptions = .get
+    var protocolType : SPProtocol = .http
     
     let kAppId     = "DemoAppId"
     let kNamespace = "DemoAppNamespace"
 
     
     func setup() {
-        self.tracker = self.getTracker("acme.fake.com", method: SPRequestPost)
+        self.tracker = self.getTracker("acme.fake.com", method: .post)
         self.updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateMetrics), userInfo: nil, repeats: true)
         self.uriField.delegate = self
         self.trackingSwitch.addTarget(self, action: #selector(action), for: .valueChanged)
@@ -87,12 +87,12 @@ class ViewController: UIViewController, UITextFieldDelegate, SPRequestCallback {
     
     @IBAction func toggleMethod(_ sender: UISegmentedControl) {
         self.methodType = (methodSwitch.selectedSegmentIndex == 0) ?
-            SPRequestGet : SPRequestPost
+            .get : .post
     }
     
     @IBAction func toggleProtocol(_ sender: UISegmentedControl) {
         self.protocolType = (protocolSwitch.selectedSegmentIndex == 0) ?
-            SPHttp : SPHttps
+            .http : .https
     }
     
     @IBAction func trackEvents(_ sender: UIButton) {
